@@ -1,4 +1,6 @@
 import { useForm } from 'react-hook-form';
+import { add, formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { ModeToggle } from './components/mode-toggle';
 import { ThemeProvider } from './components/theme-provider';
 import { Button } from './components/ui/button';
@@ -28,6 +30,7 @@ import {
 } from './components/ui/select';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 
 const formSchema = z.object({
   totalLengthCarcass: z
@@ -51,18 +54,46 @@ const formSchema = z.object({
       message: 'O valor deve ser um número válido',
     })
     .transform((value) => parseFloat(value)),
-  currentLine: z.string({ required_error: 'Informação necessária' }),
+  currentLine: z
+    .string({ required_error: 'Informação necessária' })
+    .transform((value) => parseFloat(value)),
 });
 
 type formProps = z.infer<typeof formSchema>;
 function App() {
+  const [timesRemaining, setTimesRemaining] = useState('');
   const form = useForm<formProps>({
     resolver: zodResolver(formSchema),
     defaultValues: {},
   });
 
+  const distanceBetweenCounterToolLine1 = '58';
+  const distanceBetweenCounterToolLine2 = '56';
+  const distanceBetweenCounterToolLine3 = '61';
+
   function handleSubmit(values: formProps) {
-    console.log(values);
+    const {
+      currentLine,
+      currentLineSpeed,
+      lengthProducedCounter,
+      totalLengthCarcass,
+    } = values;
+
+    const remainingMinutesOfProduction =
+      (totalLengthCarcass - (lengthProducedCounter + currentLine)) /
+      currentLineSpeed;
+
+    const result = add(new Date(), {
+      minutes: remainingMinutesOfProduction,
+    });
+
+    setTimesRemaining(
+      formatDistanceToNow(result, {
+        addSuffix: true,
+        locale: ptBR,
+      }),
+    );
+    form.reset();
   }
 
   return (
@@ -144,36 +175,50 @@ function App() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Informe a linha</FormLabel>
-                        <FormControl>
-                          <Select>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={String(field.value)}
+                        >
+                          <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Selecione a linha" />
                             </SelectTrigger>
-                            <SelectContent {...field}>
-                              <SelectItem value="1">1</SelectItem>
-                              <SelectItem value="2">2</SelectItem>
-                              <SelectItem value="3">3</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                          </FormControl>
+                          <SelectContent {...field}>
+                            <SelectItem value={distanceBetweenCounterToolLine1}>
+                              1
+                            </SelectItem>
+                            <SelectItem value={distanceBetweenCounterToolLine2}>
+                              2
+                            </SelectItem>
+                            <SelectItem value={distanceBetweenCounterToolLine3}>
+                              3
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button
-                    type="submit"
-                    className="w-full text-2xl"
-                    variant={'default'}
-                  >
-                    Calcular
-                  </Button>
+
                   <Dialog>
-                    <DialogTrigger asChild></DialogTrigger>
+                    <DialogTrigger>
+                      <Button
+                        type="submit"
+                        className="w-full text-2xl"
+                        variant={'default'}
+                      >
+                        Calcular
+                      </Button>
+                    </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        Calculo do término de produção
+                        <DialogTitle>
+                          Calculo do término de produção
+                        </DialogTitle>
                       </DialogHeader>
-                      <DialogDescription></DialogDescription>
+                      <p>A produção terminará em {timesRemaining}.</p>
                     </DialogContent>
                   </Dialog>
                 </form>
