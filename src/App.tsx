@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { add, formatDistanceToNow } from 'date-fns';
+import { add, format, formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { ModeToggle } from './components/mode-toggle';
 import { ThemeProvider } from './components/theme-provider';
@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -31,6 +32,7 @@ import {
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
+import WhatsAppShareButton from './components/whats-app-share-button';
 
 const formSchema = z.object({
   totalLengthCarcass: z
@@ -61,7 +63,7 @@ const formSchema = z.object({
 
 type formProps = z.infer<typeof formSchema>;
 function App() {
-  const [timesRemaining, setTimesRemaining] = useState('');
+  const [productionEndDate, setProductionEndDate] = useState<Date>();
   const form = useForm<formProps>({
     resolver: zodResolver(formSchema),
     defaultValues: {},
@@ -71,7 +73,7 @@ function App() {
   const distanceBetweenCounterToolLine2 = '56';
   const distanceBetweenCounterToolLine3 = '61';
 
-  function handleSubmit(values: formProps) {
+  function handleCalculatesEndOfTube(values: formProps) {
     const {
       currentLine,
       currentLineSpeed,
@@ -83,18 +85,29 @@ function App() {
       (totalLengthCarcass - (lengthProducedCounter + currentLine)) /
       currentLineSpeed;
 
-    const result = add(new Date(), {
-      minutes: remainingMinutesOfProduction,
-    });
-
-    setTimesRemaining(
-      formatDistanceToNow(result, {
-        addSuffix: true,
-        locale: ptBR,
+    setProductionEndDate(
+      add(new Date(), {
+        minutes: remainingMinutesOfProduction,
       }),
     );
+
     form.reset();
   }
+
+  const message = `A produção terminará ${
+    productionEndDate &&
+    formatDistanceToNow(productionEndDate, {
+      addSuffix: true,
+      locale: ptBR,
+    })
+  },
+  ${
+    productionEndDate &&
+    format(productionEndDate, "'no dia' d 'de' LLLL 'às' HH:mm", {
+      locale: ptBR,
+    })
+  }
+  .`;
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -118,7 +131,7 @@ function App() {
               </DialogHeader>
               <Form {...form}>
                 <form
-                  onSubmit={form.handleSubmit(handleSubmit)}
+                  onSubmit={form.handleSubmit(handleCalculatesEndOfTube)}
                   className="space-y-4"
                 >
                   <FormField
@@ -218,7 +231,26 @@ function App() {
                           Calculo do término de produção
                         </DialogTitle>
                       </DialogHeader>
-                      <p>A produção terminará em {timesRemaining}.</p>
+                      <p>
+                        A produção terminará{' '}
+                        {productionEndDate &&
+                          formatDistanceToNow(productionEndDate, {
+                            addSuffix: true,
+                            locale: ptBR,
+                          })}
+                        {productionEndDate &&
+                          format(
+                            productionEndDate,
+                            "', no dia' d 'de' LLLL 'às' HH:mm",
+                            {
+                              locale: ptBR,
+                            },
+                          )}
+                        .
+                      </p>
+                      <DialogFooter>
+                        <WhatsAppShareButton message={message} />
+                      </DialogFooter>
                     </DialogContent>
                   </Dialog>
                 </form>
