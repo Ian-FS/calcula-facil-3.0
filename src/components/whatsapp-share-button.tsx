@@ -7,7 +7,12 @@ interface WhatsAppShareButtonProps {
 export default function WhatsAppShareButton({
   message,
 }: Readonly<WhatsAppShareButtonProps>) {
-  const encodedMessage = encodeURIComponent(message);
+  function removeNewLines(str: string): string {
+    return str.replace(/\r?\n|\r/g, '').trim();
+  }
+  const formatedMessage = removeNewLines(message);
+
+  const encodedMessage = encodeURIComponent(formatedMessage);
 
   // URL do WhatsApp para compartilhar
   const whatsappShareUrl = `https://wa.me/?text=${encodedMessage}`;

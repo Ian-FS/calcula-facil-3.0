@@ -32,7 +32,7 @@ import {
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import WhatsAppShareButton from './components/whats-app-share-button';
+import WhatsAppShareButton from './components/whatsapp-share-button';
 
 const formSchema = z.object({
   totalLengthCarcass: z
@@ -106,12 +106,11 @@ function App() {
     format(productionEndDate, "'no dia' d 'de' LLLL 'às' HH:mm", {
       locale: ptBR,
     })
-  }
-  .`;
+  }.`;
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="px-5 flex justify-center items-center flex-col h-screen gap-2 bg-zinc-950">
+      <div className="min-h-screen px-5 flex justify-center items-center flex-col h-screen gap-2 bg-zinc-950">
         <div className="w-96 flex flex-col gap-6 items-end px-6">
           <ModeToggle />
           <Dialog>
