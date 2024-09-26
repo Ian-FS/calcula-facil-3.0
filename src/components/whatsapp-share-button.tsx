@@ -18,8 +18,10 @@ export default function WhatsAppShareButton({
   const whatsappShareUrl = `https://wa.me/?text=${encodedMessage}`;
 
   return (
-    <Button>
-      <a href={whatsappShareUrl}>Compartilhar no WhatsApp</a>
-    </Button>
+    <a href={whatsappShareUrl}>
+      <Button variant={'secondary'} type="button" className="w-full">
+        Compartilhar no WhatsApp
+      </Button>
+    </a>
   );
 }

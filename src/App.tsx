@@ -34,44 +34,57 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import WhatsAppShareButton from './components/whatsapp-share-button';
 
-const formSchema = z.object({
-  totalLengthCarcass: z
-    .string({ required_error: 'Informação necessaria' })
-    .transform((value) => value.replace(',', '.')) // Substitui vírgula por ponto
-    .refine((value) => !isNaN(Number(value)), {
-      message: 'O valor deve ser um número válido',
-    })
-    .transform((value) => parseFloat(value)),
-  lengthProducedCounter: z
-    .string({ required_error: 'Informação necessária' })
-    .transform((value) => value.replace(',', '.')) // Substitui vírgula por ponto
-    .refine((value) => !isNaN(Number(value)), {
-      message: 'O valor deve ser um número válido',
-    })
-    .transform((value) => parseFloat(value)),
-  currentLineSpeed: z
-    .string({ required_error: 'Informação necessária' })
-    .transform((value) => value.replace(',', '.')) // Substitui vírgula por ponto
-    .refine((value) => !isNaN(Number(value)), {
-      message: 'O valor deve ser um número válido',
-    })
-    .transform((value) => parseFloat(value)),
-  currentLine: z
-    .string({ required_error: 'Informação necessária' })
-    .transform((value) => parseFloat(value)),
-});
+const formSchema = z
+  .object({
+    totalLengthCarcass: z
+      .string({ required_error: 'Informação necessária' })
+      .min(1, 'Informação necessária')
+      .transform((value) => value.replace(',', '.'))
+      .refine((value) => !isNaN(Number(value)), {
+        message: 'O valor deve ser um número válido',
+      })
+      .transform((value) => parseFloat(value)),
+    lengthProducedCounter: z
+      .string({ required_error: 'Informação necessária' })
+      .min(1, 'Informação necessária')
+      .transform((value) => value.replace(',', '.'))
+      .refine((value) => !isNaN(Number(value)), {
+        message: 'O valor deve ser um número válido',
+      })
+      .transform((value) => parseFloat(value)),
+    currentLineSpeed: z
+      .string({ required_error: 'Informação necessária' })
+      .min(1, 'Informação necessária')
+      .transform((value) => value.replace(',', '.'))
+      .refine((value) => !isNaN(Number(value)), {
+        message: 'O valor deve ser um número válido',
+      })
+      .transform((value) => parseFloat(value)),
+    currentLine: z
+      .string({ required_error: 'Informação necessária' })
+      .min(1, 'Informação necessária')
+      .transform((value) => parseFloat(value)),
+  })
+  .refine(
+    (data) =>
+      data.totalLengthCarcass > data.lengthProducedCounter + data.currentLine,
+    {
+      message:
+        'Comprimento total menor do que a soma do comprimento produzido no contador até a ferramenta',
+      path: ['totalLengthCarcass'],
+    },
+  );
 
 type formProps = z.infer<typeof formSchema>;
 function App() {
-  const [productionEndDate, setProductionEndDate] = useState<Date>();
-  const form = useForm<formProps>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {},
-  });
-
   const distanceBetweenCounterToolLine1 = '58';
   const distanceBetweenCounterToolLine2 = '56';
   const distanceBetweenCounterToolLine3 = '61';
+  const [productionEndDate, setProductionEndDate] = useState<Date>();
+  const [isCalculated, setIsCalculated] = useState(false);
+  const form = useForm<formProps>({
+    resolver: zodResolver(formSchema),
+  });
 
   function handleCalculatesEndOfTube(values: formProps) {
     const {
@@ -90,6 +103,8 @@ function App() {
         minutes: remainingMinutesOfProduction,
       }),
     );
+
+    setIsCalculated(true);
 
     form.reset();
   }
@@ -143,6 +158,7 @@ function App() {
                           <Input
                             placeholder="Informe o comprimento da carcaça"
                             {...field}
+                            value={field.value || ''}
                           />
                         </FormControl>
                         <FormMessage />
@@ -159,6 +175,7 @@ function App() {
                           <Input
                             placeholder="Informe o comprimento atual"
                             {...field}
+                            value={field.value || ''}
                           />
                         </FormControl>
                         <FormMessage />
@@ -175,6 +192,7 @@ function App() {
                           <Input
                             placeholder="Informe a velocidade da linha"
                             {...field}
+                            value={field.value || ''}
                           />
                         </FormControl>
                         <FormMessage />
@@ -189,7 +207,8 @@ function App() {
                         <FormLabel>Informe a linha</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={String(field.value)}
+                          // defaultValue={String(field.value)}
+                          value={''}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -213,40 +232,24 @@ function App() {
                       </FormItem>
                     )}
                   />
-
-                  <Dialog>
-                    <DialogTrigger>
-                      <Button
-                        type="submit"
-                        className="w-full text-2xl"
-                        variant={'default'}
-                      >
-                        Calcular
-                      </Button>
-                    </DialogTrigger>
+                  <Button
+                    type="submit"
+                    className="w-full text-2xl py-6"
+                    variant={'default'}
+                  >
+                    Calcular
+                  </Button>
+                  <Dialog
+                    open={isCalculated}
+                    onOpenChange={() => setIsCalculated(false)}
+                  >
                     <DialogContent>
                       <DialogHeader>
                         <DialogTitle>
                           Calculo do término de produção
                         </DialogTitle>
                       </DialogHeader>
-                      <p>
-                        A produção terminará{' '}
-                        {productionEndDate &&
-                          formatDistanceToNow(productionEndDate, {
-                            addSuffix: true,
-                            locale: ptBR,
-                          })}
-                        {productionEndDate &&
-                          format(
-                            productionEndDate,
-                            "', no dia' d 'de' LLLL 'às' HH:mm",
-                            {
-                              locale: ptBR,
-                            },
-                          )}
-                        .
-                      </p>
+                      <p>{message}</p>
                       <DialogFooter>
                         <WhatsAppShareButton message={message} />
                       </DialogFooter>
