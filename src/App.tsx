@@ -84,6 +84,12 @@ function App() {
   const [isCalculated, setIsCalculated] = useState(false);
   const form = useForm<formProps>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      totalLengthCarcass: undefined,
+      lengthProducedCounter: undefined,
+      currentLineSpeed: undefined,
+      currentLine: undefined,
+    },
   });
 
   function handleCalculatesEndOfTube(values: formProps) {
@@ -125,8 +131,8 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="min-h-screen px-5 flex justify-center items-center flex-col h-screen gap-2 bg-zinc-950">
-        <div className="w-96 flex flex-col gap-6 items-end px-6">
+      <div className="min-h-screen px-5 flex justify-center items-center flex-col gap-2 bg-zinc-950">
+        <div className="w-96  flex flex-col gap-6 items-end px-6">
           <ModeToggle />
           <Dialog>
             <DialogTrigger asChild>
@@ -207,8 +213,7 @@ function App() {
                         <FormLabel>Informe a linha</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          // defaultValue={String(field.value)}
-                          value={''}
+                          value={String(field.value)}
                         >
                           <FormControl>
                             <SelectTrigger>
