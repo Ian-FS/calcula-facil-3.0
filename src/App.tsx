@@ -7,8 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="bg-zinc-950 h-screen">
-        <div className="max-w-[600px] bg-zinc-950 mx-auto px-8 py-5 flex items-center flex-col gap-2 ">
+      <div className="bg-zinc-950">
+        <div className="max-w-[600px] bg-zinc-950 mx-auto p-4 flex items-center flex-col gap-2 ">
           <span className=" w-full">
             <ModeToggle />
           </span>
