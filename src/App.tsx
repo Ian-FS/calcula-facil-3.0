@@ -7,13 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="h-screen bg-zinc-100 dark:bg-zinc-900">
+      <div className="h-screen bg-zinc-50 dark:bg-zinc-900">
         <div className="max-w-[700px] mx-auto p-4 flex items-center flex-col gap-2 ">
           <span className=" w-full">
             <ModeToggle />
           </span>
           <Tabs defaultValue="productionEndForm" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 h-12">
+            <TabsList className="grid w-full grid-cols-2 h-12 bg-zinc-200 dark:bg-zinc-800">
               <TabsTrigger value="productionEndForm" className="text-base">
                 Término de Produção
               </TabsTrigger>
