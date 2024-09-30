@@ -5,10 +5,11 @@ import { ThemeProvider } from './components/theme-provider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 
 function App() {
+  
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="h-screen bg-zinc-50 dark:bg-zinc-900">
-        <div className="max-w-[700px] mx-auto p-4 flex items-center flex-col gap-2 ">
+      <div className="max-h-full bg-zinc-900 dark:bg-zinc-900">
+        <div className="max-w-[700px] mx-auto p-3 flex items-center flex-col gap-2 ">
           <span className=" w-full">
             <ModeToggle />
           </span>

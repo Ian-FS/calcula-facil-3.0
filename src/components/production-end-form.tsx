@@ -74,111 +74,113 @@ export default function ProductionEndForm() {
     form.reset();
   }
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-2xl">Término de Produção</CardTitle>
-        <CardDescription>
-          Calcula o tempo restante de produção do tubo
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleCalculatesEndOfTube)}
-            className="space-y-4"
-          >
-            <FormField
-              control={form.control}
-              name="totalLength"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Comprimento total do tubo</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Informe o comprimento total"
-                      {...field}
-                      value={field.value || ''}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lengthProducedCounter"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Comprimento atual no contador</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Informe o comprimento atual"
-                      {...field}
-                      value={field.value || ''}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="currentLineSpeed"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Velocidade atual da linha</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Informe a velocidade da linha"
-                      {...field}
-                      value={field.value || ''}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="currentLine"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Informe a linha</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={String(field.value)}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione a linha" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent {...field}>
-                      <SelectItem value="1">1</SelectItem>
-                      <SelectItem value="2">2</SelectItem>
-                      <SelectItem value="3">3</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              type="submit"
-              className="w-full text-2xl py-6"
-              variant={'default'}
+    <div className="bg-zinc-900 h-screen">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">Término de Produção</CardTitle>
+          <CardDescription>
+            Calcula o tempo restante de produção do tubo
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleCalculatesEndOfTube)}
+              className="space-y-4"
             >
-              Calcular
-            </Button>
-            <MessageBox
-              isCalculated={isCalculated}
-              message={endProductionMessage ?? ''}
-              setIsCalculated={setIsCalculated}
-            />
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+              <FormField
+                control={form.control}
+                name="totalLength"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Comprimento total do tubo</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Informe o comprimento total"
+                        {...field}
+                        value={field.value || ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lengthProducedCounter"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Comprimento atual no contador</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Informe o comprimento atual"
+                        {...field}
+                        value={field.value || ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="currentLineSpeed"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Velocidade atual da linha</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Informe a velocidade da linha"
+                        {...field}
+                        value={field.value || ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="currentLine"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Informe a linha</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={String(field.value)}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a linha" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent {...field}>
+                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="2">2</SelectItem>
+                        <SelectItem value="3">3</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                className="w-full text-2xl py-6"
+                variant={'default'}
+              >
+                Calcular
+              </Button>
+              <MessageBox
+                isCalculated={isCalculated}
+                message={endProductionMessage ?? ''}
+                setIsCalculated={setIsCalculated}
+              />
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
