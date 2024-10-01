@@ -1,41 +1,73 @@
 interface IRateCompressionService {
-  calculatesRateCompression(
-    carcassSense: string,
-    distanceBetweenReferencePointAndCounter: number,
+  calculateRateCompression(
+    carcassDirection: 'ascending' | 'descending',
+    referencePointToCounterDistance: number,
     finalNEDLengthCarcass: number,
     initialNEDLengthExtrusion: number,
     lengthCarcassToBeProduced: number,
-    lengthProducedCounter: number,
+    producedLengthAtCounter: number,
     totalLengthCarcass: number,
   ): number;
 }
 
 export class RateCompressionService implements IRateCompressionService {
-  calculatesRateCompression(
-    carcassSense: string,
-    distanceBetweenReferencePointAndCounter: number,
+  calculateRateCompression(
+    carcassDirection: 'ascending' | 'descending',
+    referencePointToCounterDistance: number,
     finalNEDLengthCarcass: number,
     initialNEDLengthExtrusion: number,
     lengthCarcassToBeProduced: number,
-    lengthProducedCounter: number,
+    producedLengthAtCounter: number,
     totalLengthCarcass: number,
   ): number {
-    const isCrescente = carcassSense === 'crescente';
+    const actualCarcassLengthToReference =
+      this.calculateActualCarcassLengthToReference(
+        carcassDirection,
+        lengthCarcassToBeProduced,
+        initialNEDLengthExtrusion,
+        finalNEDLengthCarcass,
+        totalLengthCarcass,
+      );
 
-    const comprimentoCarcacaRealAtePontoReferencia = isCrescente
+    const producedLengthToReference = this.calculateProducedLengthToReference(
+      producedLengthAtCounter,
+      referencePointToCounterDistance,
+    );
+
+    return this.calculateCompressionRate(
+      producedLengthToReference,
+      actualCarcassLengthToReference,
+    );
+  }
+
+  private calculateActualCarcassLengthToReference(
+    carcassDirection: 'ascending' | 'descending',
+    lengthCarcassToBeProduced: number,
+    initialNEDLengthExtrusion: number,
+    finalNEDLengthCarcass: number,
+    totalLengthCarcass: number,
+  ): number {
+    return carcassDirection === 'ascending'
       ? lengthCarcassToBeProduced -
-        (initialNEDLengthExtrusion - finalNEDLengthCarcass)
+          (initialNEDLengthExtrusion - finalNEDLengthCarcass)
       : totalLengthCarcass -
-        lengthCarcassToBeProduced -
-        (initialNEDLengthExtrusion - finalNEDLengthCarcass);
+          lengthCarcassToBeProduced -
+          (initialNEDLengthExtrusion - finalNEDLengthCarcass);
+  }
 
-    const comprimentoProduzidoAtePontoReferencia =
-      lengthProducedCounter + distanceBetweenReferencePointAndCounter;
+  private calculateProducedLengthToReference(
+    producedLengthAtCounter: number,
+    referencePointToCounterDistance: number,
+  ): number {
+    return producedLengthAtCounter + referencePointToCounterDistance;
+  }
 
-    const taxaDeCompressao =
-      100 -
-      (comprimentoProduzidoAtePontoReferencia * 100) /
-        comprimentoCarcacaRealAtePontoReferencia;
-    return taxaDeCompressao;
+  private calculateCompressionRate(
+    producedLengthToReference: number,
+    actualCarcassLengthToReference: number,
+  ): number {
+    return (
+      100 - (producedLengthToReference * 100) / actualCarcassLengthToReference
+    );
   }
 }

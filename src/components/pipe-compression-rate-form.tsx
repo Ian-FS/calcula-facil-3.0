@@ -32,51 +32,55 @@ import MessageBox from './message-box';
 import { ArrowBigDown } from 'lucide-react';
 import { useState } from 'react';
 import { RateCompressionService } from '@/services/api/rate-compression-service';
-import { RateCompressionFormatMessage } from '@/utils/rate-compression-formate-message';
+import { formatRateCompressionMessage } from '@/utils/format-message-utils';
 
 type PipeCompressionRateFormProps = z.infer<typeof compressionRateFormSchema>;
 
-export default function PipeCompressionRateForm() {
+export default function PipeCompressionRateForm({
+  rateCompressionService = new RateCompressionService(),
+}: Readonly<{
+  rateCompressionService?: RateCompressionService;
+}>) {
   const [message, setMessage] = useState<string>();
   const [isCalculated, setIsCalculated] = useState(false);
   const form = useForm<PipeCompressionRateFormProps>({
     resolver: zodResolver(compressionRateFormSchema),
     defaultValues: {
-      carcassSense: undefined,
-      distanceBetweenReferencePointAndCounter: undefined,
+      carcassDirection: undefined,
+      referencePointToCounterDistance: undefined,
       finalNEDLengthCarcass: undefined,
       initialNEDLengthExtrusion: undefined,
       lengthCarcassToBeProduced: undefined,
-      lengthProducedCounter: undefined,
+      producedLengthAtCounter: undefined,
       totalLengthCarcass: undefined,
     },
   });
-  const rateCompressionService = new RateCompressionService();
 
   function handleCalculatesRateCompression(
     values: PipeCompressionRateFormProps,
   ) {
     const {
-      carcassSense,
-      distanceBetweenReferencePointAndCounter,
+      carcassDirection,
+      referencePointToCounterDistance,
       finalNEDLengthCarcass,
       initialNEDLengthExtrusion,
       lengthCarcassToBeProduced,
-      lengthProducedCounter,
+      producedLengthAtCounter,
       totalLengthCarcass,
     } = values;
 
-    const rateCompression = rateCompressionService.calculatesRateCompression(
-      carcassSense,
-      distanceBetweenReferencePointAndCounter,
+    const rateCompression = rateCompressionService.calculateRateCompression(
+      carcassDirection,
+      referencePointToCounterDistance,
       finalNEDLengthCarcass,
       initialNEDLengthExtrusion,
       lengthCarcassToBeProduced,
-      lengthProducedCounter,
+      producedLengthAtCounter,
       totalLengthCarcass,
     );
+
     setMessage(
-      RateCompressionFormatMessage({
+      formatRateCompressionMessage({
         finalNEDLengthCarcass,
         initialNEDLengthExtrusion,
         rateCompression,
@@ -189,7 +193,7 @@ export default function PipeCompressionRateForm() {
               />
               <FormField
                 control={form.control}
-                name="distanceBetweenReferencePointAndCounter"
+                name="referencePointToCounterDistance"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
@@ -208,7 +212,7 @@ export default function PipeCompressionRateForm() {
               />
               <FormField
                 control={form.control}
-                name="carcassSense"
+                name="carcassDirection"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Sentido da metragem da carcaça</FormLabel>
@@ -222,8 +226,8 @@ export default function PipeCompressionRateForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent {...field}>
-                        <SelectItem value="crescente">Crescente</SelectItem>
-                        <SelectItem value="decrescente">Decrescente</SelectItem>
+                        <SelectItem value="ascending">Crescente</SelectItem>
+                        <SelectItem value="descending">Decrescente</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -234,7 +238,7 @@ export default function PipeCompressionRateForm() {
             </div>
             <FormField
               control={form.control}
-              name="lengthProducedCounter"
+              name="producedLengthAtCounter"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Comprimento atual no contador</FormLabel>

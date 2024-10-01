@@ -22,7 +22,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ProductionServiceWithStrategy } from '@/services/api/production-service';
 import { useState } from 'react';
-import { DateFormatterService } from '@/utils/date-utils';
 import MessageBox from './message-box';
 import {
   Card,
@@ -31,15 +30,14 @@ import {
   CardHeader,
   CardTitle,
 } from './ui/card';
+import { formatEndProductionMessage } from '@/utils/format-message-utils';
 
 type ProductionFormProps = z.infer<typeof productionFormSchema>;
 
 export default function ProductionEndForm() {
   const [productionEndDate, setProductionEndDate] = useState<Date>();
   const [isCalculated, setIsCalculated] = useState(false);
-  const endProductionMessage =
-    productionEndDate &&
-    DateFormatterService.formatEndProductionMessageWithDate(productionEndDate);
+  const endProductionMessage = formatEndProductionMessage(productionEndDate);
 
   const form = useForm<ProductionFormProps>({
     resolver: zodResolver(productionFormSchema),
