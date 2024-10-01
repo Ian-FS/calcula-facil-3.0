@@ -1,6 +1,5 @@
 import { productionFormSchema } from '@/services/validation/production-form-schema';
-import { Button } from './ui/button';
-import {} from './ui/dialog';
+import { Button } from '../ui/button';
 import {
   Form,
   FormControl,
@@ -8,28 +7,28 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
-import { Input } from './ui/input';
+} from '../ui/form';
+import { Input } from '../ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from '../ui/select';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ProductionServiceWithStrategy } from '@/services/api/production-service';
 import { useState } from 'react';
-import MessageBox from './message-box';
+import MessageBox from '../message-box';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from './ui/card';
+} from '../ui/card';
 import { formatEndProductionMessage } from '@/utils/format-message-utils';
 
 type ProductionFormProps = z.infer<typeof productionFormSchema>;

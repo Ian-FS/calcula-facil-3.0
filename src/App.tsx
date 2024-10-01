@@ -1,11 +1,10 @@
 import { ModeToggle } from './components/mode-toggle';
-import PipeCompressionRateForm from './components/pipe-compression-rate-form';
-import ProductionEndForm from './components/production-end-form';
+import PipeCompressionRateForm from './components/forms/pipe-compression-rate-form';
+import ProductionEndForm from './components/forms/production-end-form';
 import { ThemeProvider } from './components/theme-provider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 
 function App() {
-  
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="max-h-full bg-zinc-900 dark:bg-zinc-900">

@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from './ui/card';
+} from '../ui/card';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { compressionRateFormSchema } from '@/services/validation/compression-rate-form-schema';
@@ -18,17 +18,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
-import { Input } from './ui/input';
+} from '../ui/form';
+import { Input } from '../ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
-import { Button } from './ui/button';
-import MessageBox from './message-box';
+} from '../ui/select';
+import { Button } from '../ui/button';
+import MessageBox from '../message-box';
 import { ArrowBigDown } from 'lucide-react';
 import { useState } from 'react';
 import { RateCompressionService } from '@/services/api/rate-compression-service';

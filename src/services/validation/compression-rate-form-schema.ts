@@ -77,15 +77,7 @@ export const compressionRateFormSchema = z
     (data) => data.initialNEDLengthExtrusion >= data.finalNEDLengthCarcass,
     {
       message:
-        'Comprimento do inválido da extrusão deve ser igual ou maior que o inválido da carcaça',
+        'Comprimento do duto inválido da extrusão deve ser igual ou maior que o inválido da carcaça',
       path: ['initialNEDLengthExtrusion'],
     },
   );
-// .refine(
-//   (data) => data.initialNEDLengthExtrusion >= data.finalNEDLengthCarcass,
-//   {
-//     message:
-//       'Comprimento do inválido da extrusão deve ser igual ou maior que o inválido da carcaça',
-//     path: ['initialNEDLengthExtrusion'],
-//   },
-// );
