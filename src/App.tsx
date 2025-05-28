@@ -17,24 +17,24 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="max-h-full bg-zinc-900 dark:bg-zinc-900">
-        <div className="max-w-[700px] mx-auto p-3 flex items-center flex-col gap-2 ">
-          <span className=" w-full">
+      <div className="min-h-screen bg-zinc-900 dark:bg-zinc-900">
+        <div className="max-w-[700px] mx-auto p-4 sm:p-6 flex items-center flex-col gap-2 ">
+          <span className="w-full mb-4">
             <ModeToggle />
           </span>
           <Tabs defaultValue="productionEndForm" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 h-12 bg-zinc-200 dark:bg-zinc-800">
-              <TabsTrigger value="productionEndForm" className="text-base">
+            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 h-auto sm:h-12 bg-zinc-200 dark:bg-zinc-800">
+              <TabsTrigger value="productionEndForm" className="text-sm sm:text-base py-2 sm:py-1.5">
                 Término de Produção
               </TabsTrigger>
-              <TabsTrigger value="pipeCompressionRate" className="text-base">
+              <TabsTrigger value="pipeCompressionRate" className="text-sm sm:text-base py-2 sm:py-1.5">
                 Taxa de compressão
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="productionEndForm">
+            <TabsContent value="productionEndForm" className="mt-4">
               <ProductionEndForm estimateProductionEndUseCase={estimateProductionEndUseCase} />
             </TabsContent>
-            <TabsContent value="pipeCompressionRate">
+            <TabsContent value="pipeCompressionRate" className="mt-4">
               <PipeCompressionRateForm calculateCompressionRateUseCase={calculateCompressionRateUseCase} />
             </TabsContent>
           </Tabs>
