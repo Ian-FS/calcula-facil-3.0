@@ -1,4 +1,4 @@
-interface ICalculateTotalValidPipe {
+export interface ICalculationParams {
   totalLengthCarcass: number;
   initialNEDLengthExtrusion: number;
   finalNEDLengthCarcass: number;
@@ -10,7 +10,7 @@ export function calculateTotalValidPipe({
   initialNEDLengthExtrusion,
   rateCompression,
   totalLengthCarcass,
-}: ICalculateTotalValidPipe): number {
+}: ICalculationParams): number {
   return (
     totalLengthCarcass -
     (initialNEDLengthExtrusion - finalNEDLengthCarcass) -

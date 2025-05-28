@@ -19,7 +19,6 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { ProductionServiceWithStrategy } from '@/services/api/production-service';
 import { useState } from 'react';
 import MessageBox from '../message-box';
 import {
@@ -29,14 +28,21 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card';
-import { formatEndProductionMessage } from '@/utils/format-message-utils';
+import {
+  IEstimateProductionEndUseCase,
+  EstimateProductionEndRequest,
+} from '@/application/use-cases/estimate-production-end-use-case.interface';
 
 type ProductionFormProps = z.infer<typeof productionFormSchema>;
 
-export default function ProductionEndForm() {
-  const [productionEndDate, setProductionEndDate] = useState<Date>();
+export default function ProductionEndForm({
+  estimateProductionEndUseCase,
+}: Readonly<{
+  estimateProductionEndUseCase: IEstimateProductionEndUseCase;
+}>) {
+  const [productionEndDate, setProductionEndDate] = useState<Date | undefined>(undefined);
+  const [displayMessage, setDisplayMessage] = useState<string | undefined>(undefined);
   const [isCalculated, setIsCalculated] = useState(false);
-  const endProductionMessage = formatEndProductionMessage(productionEndDate);
 
   const form = useForm<ProductionFormProps>({
     resolver: zodResolver(productionFormSchema),
@@ -48,24 +54,12 @@ export default function ProductionEndForm() {
     },
   });
 
-  function handleCalculatesEndOfTube(values: ProductionFormProps) {
-    const {
-      currentLine,
-      currentLineSpeed,
-      lengthProducedCounter,
-      totalLength,
-    } = values;
+  function handleCalculatesEndOfTube(values: EstimateProductionEndRequest) {
+    // ProductionFormProps should be compatible with EstimateProductionEndRequest
+    const response = estimateProductionEndUseCase.execute(values);
 
-    const productionServiceWithStrategy = new ProductionServiceWithStrategy();
-
-    const productionEndDate = productionServiceWithStrategy.calculatesEndPipe(
-      totalLength,
-      lengthProducedCounter,
-      currentLineSpeed,
-      currentLine,
-    );
-
-    setProductionEndDate(productionEndDate);
+    setProductionEndDate(response.productionEndDate);
+    setDisplayMessage(response.formattedMessage);
     setIsCalculated(true);
 
     form.reset();
@@ -171,7 +165,7 @@ export default function ProductionEndForm() {
               </Button>
               <MessageBox
                 isCalculated={isCalculated}
-                message={endProductionMessage ?? ''}
+                message={displayMessage ?? ''}
                 setIsCalculated={setIsCalculated}
               />
             </form>

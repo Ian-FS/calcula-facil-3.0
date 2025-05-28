@@ -3,8 +3,18 @@ import PipeCompressionRateForm from './components/forms/pipe-compression-rate-fo
 import ProductionEndForm from './components/forms/production-end-form';
 import { ThemeProvider } from './components/theme-provider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
+import { CalculateCompressionRateUseCase } from './application/use-cases/calculate-compression-rate.use-case';
+import { EstimateProductionEndUseCase } from './application/use-cases/estimate-production-end.use-case';
+// LineStrategy import might not be strictly necessary if EstimateProductionEndUseCase default is used.
+// import { LineStrategy } from './application/strategies/line-strategy';
 
 function App() {
+  const calculateCompressionRateUseCase = new CalculateCompressionRateUseCase();
+  const estimateProductionEndUseCase = new EstimateProductionEndUseCase();
+  // Or, to be explicit:
+  // const lineStrategy = new LineStrategy();
+  // const estimateProductionEndUseCase = new EstimateProductionEndUseCase(lineStrategy);
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="max-h-full bg-zinc-900 dark:bg-zinc-900">
@@ -22,10 +32,10 @@ function App() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="productionEndForm">
-              <ProductionEndForm />
+              <ProductionEndForm estimateProductionEndUseCase={estimateProductionEndUseCase} />
             </TabsContent>
             <TabsContent value="pipeCompressionRate">
-              <PipeCompressionRateForm />
+              <PipeCompressionRateForm calculateCompressionRateUseCase={calculateCompressionRateUseCase} />
             </TabsContent>
           </Tabs>
         </div>

@@ -31,17 +31,21 @@ import { Button } from '../ui/button';
 import MessageBox from '../message-box';
 import { ArrowBigDown } from 'lucide-react';
 import { useState } from 'react';
-import { RateCompressionService } from '@/services/api/rate-compression-service';
-import { formatRateCompressionMessage } from '@/utils/format-message-utils';
+import {
+  ICalculateCompressionRateUseCase,
+  CalculateCompressionRateRequest,
+} from '@/application/use-cases/calculate-compression-rate-use-case.interface';
+import { z } from 'zod'; // Already present, kept for context
+import { compressionRateFormSchema } from '@/services/validation/compression-rate-form-schema'; // Already present, kept for context
 
 type PipeCompressionRateFormProps = z.infer<typeof compressionRateFormSchema>;
 
 export default function PipeCompressionRateForm({
-  rateCompressionService = new RateCompressionService(),
+  calculateCompressionRateUseCase,
 }: Readonly<{
-  rateCompressionService?: RateCompressionService;
+  calculateCompressionRateUseCase: ICalculateCompressionRateUseCase;
 }>) {
-  const [message, setMessage] = useState<string>();
+  const [message, setMessage] = useState<string | undefined>(undefined);
   const [isCalculated, setIsCalculated] = useState(false);
   const form = useForm<PipeCompressionRateFormProps>({
     resolver: zodResolver(compressionRateFormSchema),
@@ -57,36 +61,14 @@ export default function PipeCompressionRateForm({
   });
 
   function handleCalculatesRateCompression(
-    values: PipeCompressionRateFormProps,
+    values: CalculateCompressionRateRequest, // Directly use the request type
   ) {
-    const {
-      carcassDirection,
-      referencePointToCounterDistance,
-      finalNEDLengthCarcass,
-      initialNEDLengthExtrusion,
-      lengthCarcassToBeProduced,
-      producedLengthAtCounter,
-      totalLengthCarcass,
-    } = values;
+    // The form values should be compatible with CalculateCompressionRateRequest
+    // as PipeCompressionRateFormProps is z.infer<typeof compressionRateFormSchema>
+    // and compressionRateFormSchema should align with CalculateCompressionRateRequest.
+    const response = calculateCompressionRateUseCase.execute(values);
 
-    const rateCompression = rateCompressionService.calculateRateCompression(
-      carcassDirection,
-      referencePointToCounterDistance,
-      finalNEDLengthCarcass,
-      initialNEDLengthExtrusion,
-      lengthCarcassToBeProduced,
-      producedLengthAtCounter,
-      totalLengthCarcass,
-    );
-
-    setMessage(
-      formatRateCompressionMessage({
-        finalNEDLengthCarcass,
-        initialNEDLengthExtrusion,
-        rateCompression,
-        totalLengthCarcass,
-      }),
-    );
+    setMessage(response.formattedMessage);
     setIsCalculated(true);
 
     form.reset();
