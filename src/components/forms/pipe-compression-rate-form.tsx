@@ -13,7 +13,6 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -94,7 +93,9 @@ export default function PipeCompressionRateForm({
                 name="totalLengthCarcass"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="mb-1.5">Comprimento total da carcaça</FormLabel>
+                    <FormLabel className="mb-1.5">
+                      Comprimento total da carcaça
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Informe a metragem"
@@ -111,7 +112,9 @@ export default function PipeCompressionRateForm({
                 name="finalNEDLengthCarcass"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="mb-1.5">Inválido do final da carcaça</FormLabel>
+                    <FormLabel className="mb-1.5">
+                      Inválido do final da carcaça
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Informe a metragem"
@@ -128,7 +131,9 @@ export default function PipeCompressionRateForm({
                 name="initialNEDLengthExtrusion"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="mb-1.5">Inválido do início da extrusão</FormLabel>
+                    <FormLabel className="mb-1.5">
+                      Inválido do início da extrusão
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Informe a metragem"
@@ -189,7 +194,9 @@ export default function PipeCompressionRateForm({
                 name="carcassDirection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="mb-1.5">Sentido da metragem da carcaça</FormLabel>
+                    <FormLabel className="mb-1.5">
+                      Sentido da metragem da carcaça
+                    </FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       value={String(field.value)}
@@ -215,7 +222,9 @@ export default function PipeCompressionRateForm({
               name="producedLengthAtCounter"
               render={({ field }) => (
                 <FormItem className="mt-6">
-                  <FormLabel className="mb-1.5">Comprimento atual no contador</FormLabel>
+                  <FormLabel className="mb-1.5">
+                    Comprimento atual no contador
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Informe a metragem"
