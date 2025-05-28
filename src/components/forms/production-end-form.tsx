@@ -65,10 +65,10 @@ export default function ProductionEndForm({
     form.reset();
   }
   return (
-    <div className="bg-zinc-900 h-screen">
+    <div>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Término de Produção</CardTitle>
+          <CardTitle>Término de Produção</CardTitle>
           <CardDescription>
             Calcula o tempo restante de produção do tubo
           </CardDescription>
@@ -84,7 +84,7 @@ export default function ProductionEndForm({
                 name="totalLength"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Comprimento total do tubo</FormLabel>
+                    <FormLabel className="mb-1.5">Comprimento total do tubo</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Informe o comprimento total"
@@ -101,7 +101,7 @@ export default function ProductionEndForm({
                 name="lengthProducedCounter"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Comprimento atual no contador</FormLabel>
+                    <FormLabel className="mb-1.5">Comprimento atual no contador</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Informe o comprimento atual"
@@ -118,7 +118,7 @@ export default function ProductionEndForm({
                 name="currentLineSpeed"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Velocidade atual da linha</FormLabel>
+                    <FormLabel className="mb-1.5">Velocidade atual da linha</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Informe a velocidade da linha"
@@ -135,7 +135,7 @@ export default function ProductionEndForm({
                 name="currentLine"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Informe a linha</FormLabel>
+                    <FormLabel className="mb-1.5">Informe a linha</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       value={String(field.value)}
@@ -158,7 +158,7 @@ export default function ProductionEndForm({
               />
               <Button
                 type="submit"
-                className="w-full text-2xl py-6"
+                className="w-full text-xl sm:text-2xl py-4 sm:py-6"
                 variant={"default"}
               >
                 Calcular
