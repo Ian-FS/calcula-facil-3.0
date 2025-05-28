@@ -1,5 +1,5 @@
-import { productionFormSchema } from '@/services/validation/production-form-schema';
-import { Button } from '../ui/button';
+import { productionFormSchema } from "@/services/validation/production-form-schema";
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -7,31 +7,31 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form';
-import { Input } from '../ui/input';
+} from "../ui/form";
+import { Input } from "../ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useState } from 'react';
-import MessageBox from '../message-box';
+} from "../ui/select";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useState } from "react";
+import MessageBox from "../message-box";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card';
+} from "../ui/card";
 import {
   IEstimateProductionEndUseCase,
   EstimateProductionEndRequest,
-} from '@/application/use-cases/estimate-production-end-use-case.interface';
+} from "@/application/use-cases/estimate-production-end-use-case.interface";
 
 type ProductionFormProps = z.infer<typeof productionFormSchema>;
 
@@ -40,8 +40,9 @@ export default function ProductionEndForm({
 }: Readonly<{
   estimateProductionEndUseCase: IEstimateProductionEndUseCase;
 }>) {
-  const [productionEndDate, setProductionEndDate] = useState<Date | undefined>(undefined);
-  const [displayMessage, setDisplayMessage] = useState<string | undefined>(undefined);
+  const [displayMessage, setDisplayMessage] = useState<string | undefined>(
+    undefined
+  );
   const [isCalculated, setIsCalculated] = useState(false);
 
   const form = useForm<ProductionFormProps>({
@@ -58,7 +59,6 @@ export default function ProductionEndForm({
     // ProductionFormProps should be compatible with EstimateProductionEndRequest
     const response = estimateProductionEndUseCase.execute(values);
 
-    setProductionEndDate(response.productionEndDate);
     setDisplayMessage(response.formattedMessage);
     setIsCalculated(true);
 
@@ -89,7 +89,7 @@ export default function ProductionEndForm({
                       <Input
                         placeholder="Informe o comprimento total"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -106,7 +106,7 @@ export default function ProductionEndForm({
                       <Input
                         placeholder="Informe o comprimento atual"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -123,7 +123,7 @@ export default function ProductionEndForm({
                       <Input
                         placeholder="Informe a velocidade da linha"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -159,13 +159,13 @@ export default function ProductionEndForm({
               <Button
                 type="submit"
                 className="w-full text-2xl py-6"
-                variant={'default'}
+                variant={"default"}
               >
                 Calcular
               </Button>
               <MessageBox
                 isCalculated={isCalculated}
-                message={displayMessage ?? ''}
+                message={displayMessage ?? ""}
                 setIsCalculated={setIsCalculated}
               />
             </form>
