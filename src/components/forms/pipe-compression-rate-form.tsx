@@ -1,15 +1,15 @@
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card';
-import { zodResolver } from '@hookform/resolvers/zod';
+} from "../ui/card";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { compressionRateFormSchema } from '@/services/validation/compression-rate-form-schema';
-import { z } from 'zod';
+import { compressionRateFormSchema } from "@/services/validation/compression-rate-form-schema";
+import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -18,26 +18,23 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form';
-import { Input } from '../ui/input';
+} from "../ui/form";
+import { Input } from "../ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Button } from '../ui/button';
-import MessageBox from '../message-box';
-import { ArrowBigDown } from 'lucide-react';
-import { useState } from 'react';
+} from "../ui/select";
+import { Button } from "../ui/button";
+import MessageBox from "../message-box";
+import { ArrowBigDown } from "lucide-react";
+import { useState } from "react";
 import {
   ICalculateCompressionRateUseCase,
   CalculateCompressionRateRequest,
-} from '@/application/use-cases/calculate-compression-rate-use-case.interface';
-import { z } from 'zod'; // Already present, kept for context
-import { compressionRateFormSchema } from '@/services/validation/compression-rate-form-schema'; // Already present, kept for context
-
+} from "@/application/use-cases/calculate-compression-rate-use-case.interface";
 type PipeCompressionRateFormProps = z.infer<typeof compressionRateFormSchema>;
 
 export default function PipeCompressionRateForm({
@@ -61,7 +58,7 @@ export default function PipeCompressionRateForm({
   });
 
   function handleCalculatesRateCompression(
-    values: CalculateCompressionRateRequest, // Directly use the request type
+    values: CalculateCompressionRateRequest // Directly use the request type
   ) {
     // The form values should be compatible with CalculateCompressionRateRequest
     // as PipeCompressionRateFormProps is z.infer<typeof compressionRateFormSchema>
@@ -88,7 +85,7 @@ export default function PipeCompressionRateForm({
             onSubmit={form.handleSubmit(handleCalculatesRateCompression)}
             className="space-y-4"
           >
-            {' '}
+            {" "}
             <FormDescription>
               <div className="flex items-center gap-1 text-zinc-900 dark:text-zinc-100 font-bold">
                 PIPE CHART <ArrowBigDown />
@@ -105,7 +102,7 @@ export default function PipeCompressionRateForm({
                       <Input
                         placeholder="Informe a metragem"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -122,7 +119,7 @@ export default function PipeCompressionRateForm({
                       <Input
                         placeholder="Informe a metragem"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -139,7 +136,7 @@ export default function PipeCompressionRateForm({
                       <Input
                         placeholder="Informe a metragem"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -166,7 +163,7 @@ export default function PipeCompressionRateForm({
                       <Input
                         placeholder="Informe a metragem"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -185,7 +182,7 @@ export default function PipeCompressionRateForm({
                       <Input
                         placeholder="Informe a metragem"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -228,7 +225,7 @@ export default function PipeCompressionRateForm({
                     <Input
                       placeholder="Informe a metragem"
                       {...field}
-                      value={field.value || ''}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -238,13 +235,13 @@ export default function PipeCompressionRateForm({
             <Button
               type="submit"
               className="w-full text-2xl py-6"
-              variant={'default'}
+              variant={"default"}
             >
               Calcular
             </Button>
             <MessageBox
               isCalculated={isCalculated}
-              message={message ?? ''}
+              message={message ?? ""}
               setIsCalculated={setIsCalculated}
             />
           </form>
