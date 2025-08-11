@@ -20,12 +20,14 @@ export default function MessageBox({
 }: Readonly<IMessageBox>) {
   return (
     <Dialog open={isCalculated} onOpenChange={() => setIsCalculated(false)}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Calculo do término de produção</DialogTitle>
+          <DialogTitle>Resultado do Cálculo</DialogTitle>
         </DialogHeader>
-        <p>{message}</p>
-        <DialogFooter>
+        <div className="py-4">
+          <p className="text-base leading-relaxed">{message}</p>
+        </div>
+        <DialogFooter className="sm:justify-start">
           <WhatsAppShareButton message={message ?? ''} />
         </DialogFooter>
       </DialogContent>

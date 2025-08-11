@@ -1,47 +1,47 @@
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card';
-import { zodResolver } from '@hookform/resolvers/zod';
+} from "../ui/card";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { compressionRateFormSchema } from '@/services/validation/compression-rate-form-schema';
-import { z } from 'zod';
+import { compressionRateFormSchema } from "@/services/validation/compression-rate-form-schema";
+import { z } from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form';
-import { Input } from '../ui/input';
+} from "../ui/form";
+import { Input } from "../ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Button } from '../ui/button';
-import MessageBox from '../message-box';
-import { ArrowBigDown } from 'lucide-react';
-import { useState } from 'react';
-import { RateCompressionService } from '@/services/api/rate-compression-service';
-import { formatRateCompressionMessage } from '@/utils/format-message-utils';
-
+} from "../ui/select";
+import { Button } from "../ui/button";
+import MessageBox from "../message-box";
+import { ArrowBigDown } from "lucide-react";
+import { useState } from "react";
+import {
+  ICalculateCompressionRateUseCase,
+  CalculateCompressionRateRequest,
+} from "@/application/use-cases/calculate-compression-rate-use-case.interface";
 type PipeCompressionRateFormProps = z.infer<typeof compressionRateFormSchema>;
 
 export default function PipeCompressionRateForm({
-  rateCompressionService = new RateCompressionService(),
+  calculateCompressionRateUseCase,
 }: Readonly<{
-  rateCompressionService?: RateCompressionService;
+  calculateCompressionRateUseCase: ICalculateCompressionRateUseCase;
 }>) {
-  const [message, setMessage] = useState<string>();
+  const [message, setMessage] = useState<string | undefined>(undefined);
   const [isCalculated, setIsCalculated] = useState(false);
   const form = useForm<PipeCompressionRateFormProps>({
     resolver: zodResolver(compressionRateFormSchema),
@@ -57,36 +57,14 @@ export default function PipeCompressionRateForm({
   });
 
   function handleCalculatesRateCompression(
-    values: PipeCompressionRateFormProps,
+    values: CalculateCompressionRateRequest // Directly use the request type
   ) {
-    const {
-      carcassDirection,
-      referencePointToCounterDistance,
-      finalNEDLengthCarcass,
-      initialNEDLengthExtrusion,
-      lengthCarcassToBeProduced,
-      producedLengthAtCounter,
-      totalLengthCarcass,
-    } = values;
+    // The form values should be compatible with CalculateCompressionRateRequest
+    // as PipeCompressionRateFormProps is z.infer<typeof compressionRateFormSchema>
+    // and compressionRateFormSchema should align with CalculateCompressionRateRequest.
+    const response = calculateCompressionRateUseCase.execute(values);
 
-    const rateCompression = rateCompressionService.calculateRateCompression(
-      carcassDirection,
-      referencePointToCounterDistance,
-      finalNEDLengthCarcass,
-      initialNEDLengthExtrusion,
-      lengthCarcassToBeProduced,
-      producedLengthAtCounter,
-      totalLengthCarcass,
-    );
-
-    setMessage(
-      formatRateCompressionMessage({
-        finalNEDLengthCarcass,
-        initialNEDLengthExtrusion,
-        rateCompression,
-        totalLengthCarcass,
-      }),
-    );
+    setMessage(response.formattedMessage);
     setIsCalculated(true);
 
     form.reset();
@@ -106,24 +84,23 @@ export default function PipeCompressionRateForm({
             onSubmit={form.handleSubmit(handleCalculatesRateCompression)}
             className="space-y-4"
           >
-            {' '}
-            <FormDescription>
-              <div className="flex items-center gap-1 text-zinc-900 dark:text-zinc-100 font-bold">
-                PIPE CHART <ArrowBigDown />
-              </div>
-            </FormDescription>
-            <div className="border-2 rounded-sm p-3 flex flex-col gap-2 focus-within:border-zinc-950 dark:focus-within:border-zinc-100">
+            <h3 className="flex items-center gap-1 text-zinc-900 dark:text-zinc-100 font-bold text-lg mb-3">
+              PIPE CHART <ArrowBigDown />
+            </h3>
+            <div className="bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-300 dark:border-zinc-700 rounded-lg p-4 shadow-sm flex flex-col gap-2">
               <FormField
                 control={form.control}
                 name="totalLengthCarcass"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Comprimento total da carcaça</FormLabel>
+                    <FormLabel className="mb-1.5">
+                      Comprimento total da carcaça
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Informe a metragem"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -135,12 +112,14 @@ export default function PipeCompressionRateForm({
                 name="finalNEDLengthCarcass"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Inválido do final da carcaça</FormLabel>
+                    <FormLabel className="mb-1.5">
+                      Inválido do final da carcaça
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Informe a metragem"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -152,12 +131,14 @@ export default function PipeCompressionRateForm({
                 name="initialNEDLengthExtrusion"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Inválido do início da extrusão</FormLabel>
+                    <FormLabel className="mb-1.5">
+                      Inválido do início da extrusão
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Informe a metragem"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -165,26 +146,24 @@ export default function PipeCompressionRateForm({
                 )}
               />
             </div>
-            <FormDescription>
-              <div className="flex items-center gap-1 text-zinc-900 dark:text-zinc-100 font-bold">
-                PONTO DE REFERÊNCIA
-                <ArrowBigDown />
-              </div>
-            </FormDescription>
-            <div className="border-2 rounded-sm p-3 flex flex-col gap-2 focus-within:border-zinc-950 dark:focus-within:border-zinc-100">
+            <h3 className="flex items-center gap-1 text-zinc-900 dark:text-zinc-100 font-bold text-lg mb-3 mt-6">
+              PONTO DE REFERÊNCIA
+              <ArrowBigDown />
+            </h3>
+            <div className="bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-300 dark:border-zinc-700 rounded-lg p-4 shadow-sm flex flex-col gap-2">
               <FormField
                 control={form.control}
                 name="lengthCarcassToBeProduced"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
+                    <FormLabel className="mb-1.5">
                       Comprimento da carcaça no ponto de referência
                     </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Informe a metragem"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -196,14 +175,14 @@ export default function PipeCompressionRateForm({
                 name="referencePointToCounterDistance"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
+                    <FormLabel className="mb-1.5">
                       Distancia entre o ponto de referencia e o contador
                     </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Informe a metragem"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -215,7 +194,9 @@ export default function PipeCompressionRateForm({
                 name="carcassDirection"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Sentido da metragem da carcaça</FormLabel>
+                    <FormLabel className="mb-1.5">
+                      Sentido da metragem da carcaça
+                    </FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       value={String(field.value)}
@@ -240,13 +221,15 @@ export default function PipeCompressionRateForm({
               control={form.control}
               name="producedLengthAtCounter"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Comprimento atual no contador</FormLabel>
+                <FormItem className="mt-6">
+                  <FormLabel className="mb-1.5">
+                    Comprimento atual no contador
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Informe a metragem"
                       {...field}
-                      value={field.value || ''}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -256,13 +239,13 @@ export default function PipeCompressionRateForm({
             <Button
               type="submit"
               className="w-full text-2xl py-6"
-              variant={'default'}
+              variant={"default"}
             >
               Calcular
             </Button>
             <MessageBox
               isCalculated={isCalculated}
-              message={message ?? ''}
+              message={message ?? ""}
               setIsCalculated={setIsCalculated}
             />
           </form>
